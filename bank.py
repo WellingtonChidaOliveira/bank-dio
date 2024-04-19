@@ -1,61 +1,51 @@
-import operations
+from account import Account 
+from user import User 
 users = {}
 accounts = {}
 
+def get_input(prompt):
+    return input(prompt)
+
 def create_user():
-    cpf = input("Digite seu cpf: ")
+    cpf = get_input("Type your cpf: ")
     if cpf in users:
-        print("Usuário já cadastrado")
+        print("User already exists")
         return
-    user = {
-        'name': input("Digite seu nome: "),
-        'cpf': cpf,
-        'idade': input("Digite sua idade: ")
-    }
+    name = get_input("Type name: ")
+    age = get_input("Type age: ")
+    user = User(name, cpf, age)
     users[cpf] = user
-    create_account(cpf)
+    create_account(user)
 
-def create_account(cpf):
-    account = {
-        'user': users[cpf],
-        'agency': '0001',
-        'balance': 0,
-        'hist': f"valor:{0} operação: inicialização\n",
-        'withdrawn': 0
-    }
-    accounts[cpf] = account
-
-
+def create_account(user):
+    account = Account(user)
+    accounts[user.cpf] = account
 
 def access_account():
-    
-    cpf = input("Digite seu cpf: ")
+    cpf = get_input("Type your cpf: ")
     if cpf in users:
         account = accounts[cpf]
-        print(
-            """
-            1 - sacar
+        operations = {
+            '1': account.withdrawn,
+            '2': account.deposit,
+            '3': account.extract,
+            '4': exit
+        }
+        while True:
+            print("""
+            1 - withdrawn
             2 - deposit
-            3 - extrato
-            4 - sair
-            """
-        )
-        choice = input("Digite a opção desejada: ")
-        while choice != '4':
-            if choice == '1':
-               account['balance'], account['hist'], account['withdrawn'] = operations.withdrawn(balance=account['balance'], hist=account['hist'], withdrawn=account['withdrawn'])
-            elif choice == '2':
-               account['balance'], account['hist'] = operations.deposit(balance= account['balance'], hist= account['hist'])
-            elif choice == '3':
-                operations.extract(hist= account['hist'])
+            3 - extract
+            4 - exit
+            """)
+            choice = get_input("Type operation: ")
+            operation = operations.get(choice)
+            if operation:
+                operation()
             else:
-                print("Opção inválida")
-            choice = input("Digite a opção desejada: ")
-        print("Obrigado por usar nosso banco")
+                print("Invalid option")
     else:
-        print("Usuário não encontrado")
-        
-
+        print("User not found")
 
 choice_actions = {
     '0': exit,
@@ -65,17 +55,15 @@ choice_actions = {
 
 while True:
     print("""
-    Bem vindo ao banco
-    Digite a opção desejada
-    0 - sair
-    1 - criar conta
-    2 - acessar conta
+    Welcome to the bank
+    Type the option:
+    0 - exit
+    1 - create account
+    2 - access account
     """)
-
-    choice = input("Digite a opção desejada: ")
+    choice = get_input("Type your choice: ")
     action = choice_actions.get(choice)
-
     if action:
         action()
     else:
-        print("Opção inválida")
+        print("Invalid operation")

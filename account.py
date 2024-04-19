@@ -1,5 +1,4 @@
-import user 
-class Account:
+class Account():
     def __init__(self, user, agency='0001'):
         self.user = user
         self._agency = agency
