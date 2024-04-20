@@ -18,13 +18,13 @@ class Account():
             self._balance -= value
             self._withdrawn += value
             self._hist += f"balance:{value} operation: withdrawn\n"
-        return self._balance, self._hist, self._withdrawn
+       
     
     def deposit(self):
         value = float(input("Type value to deposit: "))
         self._balance += value 
         self._hist += f"Value:{value} operation: deposit\n"
-        return self._balance, self._hist
+       
     
     def extract(self):
         print(self._hist)
